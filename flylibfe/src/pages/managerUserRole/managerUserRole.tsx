@@ -9,12 +9,15 @@ import {
   deleteRole
 } from '../../api/manageruserrole';
 import { UserRole } from '../../types/manageUserRole';
-import FormInput from '../../components/formInput';
-import FormSelect from '../../components/formSelect';
-import List from '../../components/list';
+import UserList from '../../components/managerUserRole/userList';
+import UserSearch from '../../components/managerUserRole/userSearch';
+import RoleAssignForm from '../../components/managerUserRole/roleAssignForm';
+import RoleManageForm from '../../components/managerUserRole/roleManageForm';
 import Modal from '../../components/modal';
 import { useForm } from '../../hooks/useForm';
 import { useModal } from '../../hooks/useModal';
+import Typography from '@mui/material/Typography';
+import '../../styles/managerUserRole/managerUserRole.css';
 
 const ManagerUserRole: React.FC = () => {
   const [users, setUsers] = useState<UserRole[]>([]);
@@ -88,71 +91,45 @@ const ManagerUserRole: React.FC = () => {
   };
 
   return (
-    <div>
-      <h2>Gestión de Usuarios y Roles</h2>
+    <div className="manager-user-role-container">
+      <Typography variant="h5" align="center" gutterBottom>
+        Gestión de Usuarios y Roles
+      </Typography>
 
-      <h3>Usuarios</h3>
-      <List
-        items={users}
-        renderItem={user => (
-          <li key={user.id}>
-            <strong>{user.displayName}</strong> ({user.email}) - Roles: {user.roles.join(', ')}
-          </li>
-        )}
-      />
+      <div className="manager-user-role-section">
+        <Typography variant="h6">Usuarios</Typography>
+        <UserList users={users} />
+      </div>
 
-      <div>
-        <h3>Buscar usuario por Email</h3>
-        <FormInput
-          label="Email"
-          name="email"
+      <div className="manager-user-role-section">
+        <Typography variant="h6">Buscar usuario por Email</Typography>
+        <UserSearch
           value={searchForm.email}
-          onChange={handleSearchChange}
-          required
+          handleChange={handleSearchChange}
+          handleSearch={handleSearchByEmail}
+          userResult={userResult}
         />
-        <button type="button" onClick={handleSearchByEmail}>Buscar</button>
-        {userResult && (
-          <div>
-            <p>ID: {userResult.id}</p>
-            <p>Email: {userResult.email}</p>
-            <p>Nombre: {userResult.displayName}</p>
-            <p>Roles: {userResult.roles.join(', ')}</p>
-          </div>
-        )}
       </div>
 
-      <div>
-        <h3>Asignar/Remover rol a usuario</h3>
-        <FormInput
-          label="Email de usuario"
-          name="userEmail"
-          value={assignForm.userEmail}
-          onChange={handleAssignChange}
-          required
+      <div className="manager-user-role-section">
+        <Typography variant="h6">Asignar/Remover rol a usuario</Typography>
+        <RoleAssignForm
+          values={assignForm}
+          roles={roles}
+          handleChange={handleAssignChange}
+          handleAssign={handleAssignRole}
+          handleRemove={handleRemoveRole}
         />
-        <FormSelect
-          label="Rol"
-          name="role"
-          value={assignForm.role}
-          onChange={handleAssignChange}
-          options={roles.map(role => ({ value: role, label: role }))}
-          required
-        />
-        <button type="button" onClick={handleAssignRole}>Asignar rol</button>
-        <button type="button" onClick={handleRemoveRole}>Remover rol</button>
       </div>
 
-      <div>
-        <h3>Crear/Eliminar rol</h3>
-        <FormInput
-          label="Nombre del rol"
-          name="roleName"
+      <div className="manager-user-role-section">
+        <Typography variant="h6">Crear/Eliminar rol</Typography>
+        <RoleManageForm
           value={roleForm.roleName}
-          onChange={handleRoleChange}
-          required
+          handleChange={handleRoleChange}
+          handleCreate={handleCreateRole}
+          handleDelete={handleDeleteRole}
         />
-        <button type="button" onClick={handleCreateRole}>Crear rol</button>
-        <button type="button" onClick={handleDeleteRole}>Eliminar rol</button>
       </div>
 
       <Modal

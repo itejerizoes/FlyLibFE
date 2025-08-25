@@ -1,11 +1,14 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import FormInput from '../../components/formInput';
 import { useForm } from '../../hooks/useForm';
 import { useToggle } from '../../hooks/useToggle';
 import { useLogin } from '../../hooks/useLogin';
 import { useRedirectIfAuthenticated } from '../../hooks/useRedirectIfAuthenticated';
+import LoginForm from '../../components/common/loginForm';
+import LoginGoogleButton from '../../components/common/loginGoogleButton';
+import Typography from '@mui/material/Typography';
+import '../../styles/common/login.css';
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
@@ -30,39 +33,25 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div>
-      <h2>Iniciar sesión</h2>
-      <form onSubmit={handleSubmit}>
-        <FormInput
-          label="Correo"
-          type="email"
-          name="email"
-          value={values.email}
-          onChange={handleChange}
-          required
-          placeholder="Correo electrónico"
-        />
-        <FormInput
-          label="Contraseña"
-          type={showPassword ? 'text' : 'password'}
-          name="password"
-          value={values.password}
-          onChange={handleChange}
-          required
-          placeholder="Contraseña"
-        />
-        <button type="button" onClick={toggleShowPassword} style={{ marginBottom: 8 }}>
-          {showPassword ? 'Ocultar' : 'Mostrar'} contraseña
-        </button>
-        <button type="submit" disabled={loading}>Entrar</button>
-      </form>
-      <p>
-        ¿No tienes cuenta? <a href="/register">Regístrate aquí</a>
-      </p>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <button onClick={handleGoogleExternalLogin} disabled={loading}>
-        Iniciar sesión con Google
-      </button>
+    <div className="login-container">
+      <Typography variant="h5" align="center" gutterBottom>
+        Iniciar sesión
+      </Typography>
+      <LoginForm
+        values={values}
+        handleChange={handleChange}
+        showPassword={showPassword}
+        toggleShowPassword={toggleShowPassword}
+        loading={loading}
+        error={error}
+        handleSubmit={handleSubmit}
+      />
+      <LoginGoogleButton loading={loading} onClick={handleGoogleExternalLogin} />
+      <div className="login-link">
+        <Typography>
+          ¿No tienes cuenta? <a href="/register">Regístrate aquí</a>
+        </Typography>
+      </div>
     </div>
   );
 };

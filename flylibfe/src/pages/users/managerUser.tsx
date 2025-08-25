@@ -7,11 +7,14 @@ import {
   deleteUser
 } from '../../api/users';
 import { User, UserCreate, UserUpdate } from '../../types/user';
-import FormInput from '../../components/formInput';
-import List from '../../components/list';
+import UsersList from '../../components/managerUser/usersList';
+import UserForm from '../../components/managerUser/userForm';
+import UserSearch from '../../components/managerUser/userSearch';
 import Modal from '../../components/modal';
 import { useForm } from '../../hooks/useForm';
 import { useModal } from '../../hooks/useModal';
+import Typography from '@mui/material/Typography';
+import '../../styles/users/managerUser.css';
 
 const ManagerUser: React.FC = () => {
   const { values: createData, handleChange: handleCreateChange, reset: resetCreate } = useForm<UserCreate>({ displayName: '', authProvider: '' });
@@ -77,86 +80,43 @@ const ManagerUser: React.FC = () => {
   };
 
   return (
-    <div>
-      <h2>Gestión de Usuarios</h2>
+    <div className="manager-user-container">
+      <Typography variant="h5" align="center" gutterBottom>
+        Gestión de Usuarios
+      </Typography>
 
-      <h3>Listado de usuarios</h3>
-      {loading ? (
-        <div>Cargando usuarios...</div>
-      ) : (
-        <List
-          items={users}
-          renderItem={user => (
-            <li key={user.id}>
-              <strong>{user.displayName}</strong> ({user.authProvider}) - ID: {user.id}
-            </li>
-          )}
-        />
-      )}
+      <div className="manager-user-section">
+        <UsersList users={users} loading={loading} />
+      </div>
 
-      <form onSubmit={handleCreate}>
-        <h3>Crear usuario</h3>
-        <FormInput
-          label="Display Name"
-          name="displayName"
-          value={createData.displayName}
-          onChange={handleCreateChange}
-          required
+      <div className="manager-user-section">
+        <Typography variant="h6">Crear usuario</Typography>
+        <UserForm
+          values={createData}
+          handleChange={handleCreateChange}
+          handleSubmit={handleCreate}
         />
-        <FormInput
-          label="Auth Provider"
-          name="authProvider"
-          value={createData.authProvider}
-          onChange={handleCreateChange}
-          required
-        />
-        <button type="submit">Crear</button>
-      </form>
+      </div>
 
-      <form onSubmit={handleUpdate}>
-        <h3>Actualizar usuario</h3>
-        <FormInput
-          label="ID"
-          name="id"
-          value={updateData.id}
-          onChange={handleUpdateChange}
-          required
+      <div className="manager-user-section">
+        <Typography variant="h6">Actualizar/Eliminar usuario</Typography>
+        <UserForm
+          values={updateData}
+          handleChange={handleUpdateChange}
+          handleSubmit={handleUpdate}
+          handleDelete={handleDelete}
+          isUpdate
         />
-        <FormInput
-          label="Display Name"
-          name="displayName"
-          value={updateData.displayName}
-          onChange={handleUpdateChange}
-          required
-        />
-        <FormInput
-          label="Auth Provider"
-          name="authProvider"
-          value={updateData.authProvider}
-          onChange={handleUpdateChange}
-          required
-        />
-        <button type="submit">Actualizar</button>
-        <button type="button" onClick={handleDelete} style={{ marginLeft: '10px' }}>Eliminar</button>
-      </form>
+      </div>
 
-      <div>
-        <h3>Buscar usuario por ID</h3>
-        <FormInput
-          label="ID"
-          name="id"
+      <div className="manager-user-section">
+        <Typography variant="h6">Buscar usuario por ID</Typography>
+        <UserSearch
           value={searchForm.id}
-          onChange={handleSearchChange}
+          handleChange={handleSearchChange}
+          handleSearch={handleSearchById}
+          userResult={userResult}
         />
-        <button type="button" onClick={handleSearchById}>Buscar</button>
-        {userResult && (
-          <div>
-            <p>ID: {userResult.id}</p>
-            <p>Nombre: {userResult.displayName}</p>
-            <p>AuthProvider: {userResult.authProvider}</p>
-            <p>Visitados: {userResult.visiteds?.length ?? 0}</p>
-          </div>
-        )}
       </div>
 
       <Modal

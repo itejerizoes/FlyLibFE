@@ -3,6 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useRedirectIfNotAuthenticated } from '../../hooks/useRedirectIfNotAuthenticated';
 import { useQueryParams } from '../../hooks/useQueryParams';
+import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
+import DashboardHeader from '../../components/common/dashboardHeader';
+import DashboardMenu from '../../components/common/dashboardMenu';
+import DashboardContent from '../../components/common/dashboardContent';
+import '../../styles/common/dashboard.css';
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
@@ -30,9 +36,17 @@ const Dashboard: React.FC = () => {
   };
 
   return (
-    <div>
-      <h2>Bienvenido, {displayName || 'Usuario'}</h2>
-      <button onClick={handleLogout}>Cerrar sesión</button>
+    <div className="dashboard-container">
+      <DashboardHeader displayName={displayName ?? undefined} />
+      <div className="dashboard-menu">
+        <DashboardMenu />
+      </div>
+      <DashboardContent />
+      <Box className="dashboard-logout">
+        <Button variant="contained" color="secondary" onClick={handleLogout}>
+          Cerrar sesión
+        </Button>
+      </Box>
     </div>
   );
 };

@@ -7,10 +7,14 @@ import {
   getCountryByName
 } from '../../api/countries';
 import { Country } from '../../types/country';
-import FormInput from '../../components/formInput';
+import CountryForm from '../../components/countryManager/countryForm';
+import CountrySearch from '../../components/countryManager/countrySearch';
+import CountryResult from '../../components/countryManager/countryResult';
 import Modal from '../../components/modal';
 import { useForm } from '../../hooks/useForm';
 import { useModal } from '../../hooks/useModal';
+import Typography from '@mui/material/Typography';
+import '../../styles/countries/countryManager.css';
 
 const CountryManager: React.FC = () => {
   // Form hooks
@@ -82,88 +86,41 @@ const CountryManager: React.FC = () => {
   };
 
   return (
-    <div>
-      <h2>Gestión de Países</h2>
+    <div className="country-manager-container">
+      <Typography variant="h5" align="center" gutterBottom>
+        Gestión de Países
+      </Typography>
 
-      <form onSubmit={handleCreate}>
-        <h3>Crear país</h3>
-        <FormInput
-          label="Nombre"
-          name="name"
-          value={createData.name}
-          onChange={handleCreateChange}
-          required
+      <div className="country-manager-section">
+        <Typography variant="h6">Crear país</Typography>
+        <CountryForm
+          values={createData}
+          handleChange={handleCreateChange}
+          handleSubmit={handleCreate}
         />
-        <FormInput
-          label="ISO Code"
-          name="isoCode"
-          value={createData.isoCode}
-          onChange={handleCreateChange}
-          required
-        />
-        <button type="submit">Crear</button>
-      </form>
-
-      <form onSubmit={handleUpdate}>
-        <h3>Actualizar país</h3>
-        <FormInput
-          label="ID"
-          type="number"
-          name="countryId"
-          value={updateData.countryId}
-          onChange={handleUpdateChange}
-          required
-        />
-        <FormInput
-          label="Nombre"
-          name="name"
-          value={updateData.name}
-          onChange={handleUpdateChange}
-          required
-        />
-        <FormInput
-          label="ISO Code"
-          name="isoCode"
-          value={updateData.isoCode}
-          onChange={handleUpdateChange}
-          required
-        />
-        <button type="submit">Actualizar</button>
-        <button type="button" onClick={handleDelete} style={{ marginLeft: '10px' }}>Eliminar</button>
-      </form>
-
-      <div>
-        <h3>Buscar país por ID</h3>
-        <FormInput
-          label="ID"
-          type="number"
-          name="id"
-          value={search.id}
-          onChange={handleSearchChange}
-        />
-        <button type="button" onClick={handleSearchById}>Buscar</button>
       </div>
 
-      <div>
-        <h3>Buscar país por nombre</h3>
-        <FormInput
-          label="Nombre"
-          name="name"
-          value={search.name}
-          onChange={handleSearchChange}
+      <div className="country-manager-section">
+        <Typography variant="h6">Actualizar/Eliminar país</Typography>
+        <CountryForm
+          values={updateData}
+          handleChange={handleUpdateChange}
+          handleSubmit={handleUpdate}
+          handleDelete={handleDelete}
+          isUpdate
         />
-        <button type="button" onClick={handleSearchByName}>Buscar</button>
       </div>
 
-      {countryResult && (
-        <div>
-          <h4>Resultado:</h4>
-          <p>ID: {countryResult.countryId}</p>
-          <p>Nombre: {countryResult.name}</p>
-          <p>ISO Code: {countryResult.isoCode}</p>
-          <p>Provincias: {countryResult.provinces.map(p => p.name).join(', ')}</p>
-        </div>
-      )}
+      <div className="country-manager-section">
+        <Typography variant="h6">Buscar país</Typography>
+        <CountrySearch
+          values={search}
+          handleChange={handleSearchChange}
+          handleSearchById={handleSearchById}
+          handleSearchByName={handleSearchByName}
+        />
+        <CountryResult country={countryResult} />
+      </div>
 
       <Modal
         open={open}

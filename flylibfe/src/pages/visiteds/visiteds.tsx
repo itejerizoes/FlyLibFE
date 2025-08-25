@@ -1,26 +1,22 @@
 import React from 'react';
 import { getVisiteds } from '../../api/visiteds';
 import { Visited } from '../../types/visited';
-import List from '../../components/list';
+import VisitedsList from '../../components/visiteds/visitedsList';
+import Typography from '@mui/material/Typography';
 import { useFetch } from '../../hooks/useFetch';
+import '../../styles/visiteds/visiteds.css';
 
 const Visiteds: React.FC = () => {
   const { data: visiteds, loading, error } = useFetch<Visited[]>(getVisiteds);
 
-  if (loading) return <div>Cargando registros de visitas...</div>;
-  if (error) return <div style={{ color: 'red' }}>{error}</div>;
-
   return (
-    <div>
-      <h2>Listado de Provincias Visitadas</h2>
-      <List
-        items={visiteds || []}
-        renderItem={visited => (
-          <li key={visited.id}>
-            Usuario: {visited.userId} | Provincia: {visited.provinceId} | Fotos: {visited.photos?.length ?? 0}
-          </li>
-        )}
-      />
+    <div className="visiteds-container">
+      <Typography variant="h5" align="center" gutterBottom>
+        Listado de Provincias Visitadas
+      </Typography>
+      {loading && <Typography>Cargando registros de visitas...</Typography>}
+      {error && <Typography color="error">{error}</Typography>}
+      {visiteds && <VisitedsList visiteds={visiteds} />}
     </div>
   );
 };

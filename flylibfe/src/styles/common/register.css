@@ -1,0 +1,12 @@
+.register-container {
+  max-width: 400px;
+  margin: 48px auto;
+  padding: 32px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+.register-link {
+  margin-top: 16px;
+  text-align: center;
+}

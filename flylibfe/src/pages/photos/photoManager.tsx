@@ -6,10 +6,14 @@ import {
   getPhotoById
 } from '../../api/photos';
 import { PhotoCreate, PhotoUpdate, Photo } from '../../types/photo';
-import FormInput from '../../components/formInput';
+import PhotoForm from '../../components/photoManager/photoForm';
+import PhotoSearch from '../../components/photoManager/photoSearch';
+import PhotoResult from '../../components/photoManager/photoResult';
 import Modal from '../../components/modal';
 import { useForm } from '../../hooks/useForm';
 import { useModal } from '../../hooks/useModal';
+import Typography from '@mui/material/Typography';
+import '../../styles/photos/photoManager.css';
 
 const PhotoManager: React.FC = () => {
   // Form hooks
@@ -65,88 +69,45 @@ const PhotoManager: React.FC = () => {
   };
 
   return (
-    <div>
-      <h2>Gestión de Fotos</h2>
+    <div className="photo-manager-container">
+      <Typography variant="h5" align="center" gutterBottom>
+        Gestión de Fotos
+      </Typography>
 
-      <form onSubmit={handleCreate}>
-        <h3>Crear foto</h3>
-        <FormInput
-          label="URL"
-          name="url"
-          value={createData.url}
-          onChange={handleCreateChange}
-          required
+      <div className="photo-manager-section">
+        <Typography variant="h6">Crear foto</Typography>
+        <PhotoForm
+          values={{
+            ...createData,
+            description: createData.description ?? ''
+          }}
+          handleChange={handleCreateChange}
+          handleSubmit={handleCreate}
         />
-        <FormInput
-          label="Descripción"
-          name="description"
-          value={createData.description || ''}
-          onChange={handleCreateChange}
-        />
-        <FormInput
-          label="VisitedId"
-          type="number"
-          name="visitedId"
-          value={createData.visitedId}
-          onChange={handleCreateChange}
-          required
-        />
-        <button type="submit">Crear</button>
-      </form>
+      </div>
 
-      <form onSubmit={handleUpdate}>
-        <h3>Actualizar foto</h3>
-        <FormInput
-          label="ID"
-          type="number"
-          name="photoId"
-          value={updateData.photoId}
-          onChange={handleUpdateChange}
-          required
+      <div className="photo-manager-section">
+        <Typography variant="h6">Actualizar/Eliminar foto</Typography>
+        <PhotoForm
+          values={{
+            ...updateData,
+            description: updateData.description ?? ''
+          }}
+          handleChange={handleUpdateChange}
+          handleSubmit={handleUpdate}
+          handleDelete={handleDelete}
+          isUpdate
         />
-        <FormInput
-          label="URL"
-          name="url"
-          value={updateData.url}
-          onChange={handleUpdateChange}
-          required
-        />
-        <FormInput
-          label="Descripción"
-          name="description"
-          value={updateData.description || ''}
-          onChange={handleUpdateChange}
-        />
-        <FormInput
-          label="VisitedId"
-          type="number"
-          name="visitedId"
-          value={updateData.visitedId}
-          onChange={handleUpdateChange}
-          required
-        />
-        <button type="submit">Actualizar</button>
-        <button type="button" onClick={handleDelete} style={{ marginLeft: '10px' }}>Eliminar</button>
-      </form>
+      </div>
 
-      <div>
-        <h3>Buscar foto por ID</h3>
-        <FormInput
-          label="ID"
-          type="number"
-          name="id"
+      <div className="photo-manager-section">
+        <Typography variant="h6">Buscar foto por ID</Typography>
+        <PhotoSearch
           value={searchForm.id}
-          onChange={handleSearchChange}
+          handleChange={handleSearchChange}
+          handleSearch={handleSearchById}
         />
-        <button type="button" onClick={handleSearchById}>Buscar</button>
-        {photoResult && (
-          <div>
-            <img src={photoResult.url} alt={photoResult.description || 'Foto'} width={120} />
-            <p>ID: {photoResult.id}</p>
-            <p>Descripción: {photoResult.description}</p>
-            <p>VisitedId: {photoResult.visitedId}</p>
-          </div>
-        )}
+        <PhotoResult photo={photoResult} />
       </div>
 
       <Modal

@@ -7,11 +7,15 @@ import {
   deleteVisited
 } from '../../api/visiteds';
 import { Visited, VisitedCreate, VisitedUpdate } from '../../types/visited';
-import FormInput from '../../components/formInput';
-import List from '../../components/list';
+import VisitedList from '../../components/visitedManager/visitedList';
+import VisitedForm from '../../components/visitedManager/visitedForm';
+import VisitedSearch from '../../components/visitedManager/visitedSearch';
+import VisitedResult from '../../components/visitedManager/visitedResult';
 import Modal from '../../components/modal';
 import { useForm } from '../../hooks/useForm';
 import { useModal } from '../../hooks/useModal';
+import Typography from '@mui/material/Typography';
+import '../../styles/visiteds/visitedManager.css';
 
 const VisitedManager: React.FC = () => {
   const { values: createData, handleChange: handleCreateChange, reset: resetCreate } = useForm<VisitedCreate>({ userId: '', provinceId: 0, photos: [] });
@@ -77,90 +81,43 @@ const VisitedManager: React.FC = () => {
   };
 
   return (
-    <div>
-      <h2>Gestión de Provincias Visitadas</h2>
+    <div className="visited-manager-container">
+      <Typography variant="h5" align="center" gutterBottom>
+        Gestión de Provincias Visitadas
+      </Typography>
 
-      <h3>Listado de registros</h3>
-      {loading ? (
-        <div>Cargando registros...</div>
-      ) : (
-        <List
-          items={visiteds}
-          renderItem={v => (
-            <li key={v.id}>
-              Usuario: {v.userId} | Provincia: {v.provinceId} | Fotos: {v.photos?.length ?? 0}
-            </li>
-          )}
-        />
-      )}
+      <div className="visited-manager-section">
+        <VisitedList visiteds={visiteds} loading={loading} />
+      </div>
 
-      <form onSubmit={handleCreate}>
-        <h3>Crear registro</h3>
-        <FormInput
-          label="UserId"
-          name="userId"
-          value={createData.userId}
-          onChange={handleCreateChange}
-          required
+      <div className="visited-manager-section">
+        <Typography variant="h6">Crear registro</Typography>
+        <VisitedForm
+          values={createData}
+          handleChange={handleCreateChange}
+          handleSubmit={handleCreate}
         />
-        <FormInput
-          label="ProvinceId"
-          type="number"
-          name="provinceId"
-          value={createData.provinceId}
-          onChange={handleCreateChange}
-          required
-        />
-        <button type="submit">Crear</button>
-      </form>
+      </div>
 
-      <form onSubmit={handleUpdate}>
-        <h3>Actualizar registro</h3>
-        <FormInput
-          label="ID"
-          type="number"
-          name="id"
-          value={updateData.id}
-          onChange={handleUpdateChange}
-          required
+      <div className="visited-manager-section">
+        <Typography variant="h6">Actualizar/Eliminar registro</Typography>
+        <VisitedForm
+          values={updateData}
+          handleChange={handleUpdateChange}
+          handleSubmit={handleUpdate}
+          handleDelete={handleDelete}
+          isUpdate
         />
-        <FormInput
-          label="UserId"
-          name="userId"
-          value={updateData.userId}
-          onChange={handleUpdateChange}
-          required
-        />
-        <FormInput
-          label="ProvinceId"
-          type="number"
-          name="provinceId"
-          value={updateData.provinceId}
-          onChange={handleUpdateChange}
-          required
-        />
-        <button type="submit">Actualizar</button>
-        <button type="button" onClick={handleDelete} style={{ marginLeft: '10px' }}>Eliminar</button>
-      </form>
+      </div>
 
-      <div>
-        <h3>Buscar registro por ID</h3>
-        <FormInput
-          label="ID"
-          type="number"
-          name="id"
+      <div className="visited-manager-section">
+        <Typography variant="h6">Buscar registro por ID</Typography>
+        <VisitedSearch
           value={searchForm.id}
-          onChange={handleSearchChange}
+          handleChange={handleSearchChange}
+          handleSearch={handleSearchById}
         />
-        <button type="button" onClick={handleSearchById}>Buscar</button>
-        {visitedResult && (
-          <div>
-            <p>ID: {visitedResult.id}</p>
-            <p>UserId: {visitedResult.userId}</p>
-            <p>ProvinceId: {visitedResult.provinceId}</p>
-            <p>Fotos: {visitedResult.photos?.length ?? 0}</p>
-          </div>
-        )}
+        <VisitedResult visited={visitedResult} />
       </div>
 
       <Modal

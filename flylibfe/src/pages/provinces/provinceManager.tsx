@@ -7,10 +7,14 @@ import {
   getProvinceByName
 } from '../../api/provinces';
 import { ProvinceCreate, ProvinceUpdate, Province } from '../../types/province';
-import FormInput from '../../components/formInput';
+import ProvinceForm from '../../components/provinceManager/provinceForm';
+import ProvinceSearch from '../../components/provinceManager/provinceSearch';
+import ProvinceResult from '../../components/provinceManager/provinceResult';
 import Modal from '../../components/modal';
 import { useForm } from '../../hooks/useForm';
 import { useModal } from '../../hooks/useModal';
+import Typography from '@mui/material/Typography';
+import '../../styles/provinces/provinceManager.css';
 
 const ProvinceManager: React.FC = () => {
   // Form hooks
@@ -77,90 +81,41 @@ const ProvinceManager: React.FC = () => {
   };
 
   return (
-    <div>
-      <h2>Gestión de Provincias</h2>
+    <div className="province-manager-container">
+      <Typography variant="h5" align="center" gutterBottom>
+        Gestión de Provincias
+      </Typography>
 
-      <form onSubmit={handleCreate}>
-        <h3>Crear provincia</h3>
-        <FormInput
-          label="Nombre"
-          name="name"
-          value={createData.name}
-          onChange={handleCreateChange}
-          required
+      <div className="province-manager-section">
+        <Typography variant="h6">Crear provincia</Typography>
+        <ProvinceForm
+          values={createData}
+          handleChange={handleCreateChange}
+          handleSubmit={handleCreate}
         />
-        <FormInput
-          label="CountryId"
-          type="number"
-          name="countryId"
-          value={createData.countryId}
-          onChange={handleCreateChange}
-          required
-        />
-        <button type="submit">Crear</button>
-      </form>
-
-      <form onSubmit={handleUpdate}>
-        <h3>Actualizar provincia</h3>
-        <FormInput
-          label="ID"
-          type="number"
-          name="provinceId"
-          value={updateData.provinceId}
-          onChange={handleUpdateChange}
-          required
-        />
-        <FormInput
-          label="Nombre"
-          name="name"
-          value={updateData.name}
-          onChange={handleUpdateChange}
-          required
-        />
-        <FormInput
-          label="CountryId"
-          type="number"
-          name="countryId"
-          value={updateData.countryId}
-          onChange={handleUpdateChange}
-          required
-        />
-        <button type="submit">Actualizar</button>
-        <button type="button" onClick={handleDelete} style={{ marginLeft: '10px' }}>Eliminar</button>
-      </form>
-
-      <div>
-        <h3>Buscar provincia por ID</h3>
-        <FormInput
-          label="ID"
-          type="number"
-          name="id"
-          value={searchForm.id}
-          onChange={handleSearchChange}
-        />
-        <button type="button" onClick={handleSearchById}>Buscar</button>
       </div>
 
-      <div>
-        <h3>Buscar provincia por nombre</h3>
-        <FormInput
-          label="Nombre"
-          name="name"
-          value={searchForm.name}
-          onChange={handleSearchChange}
+      <div className="province-manager-section">
+        <Typography variant="h6">Actualizar/Eliminar provincia</Typography>
+        <ProvinceForm
+          values={updateData}
+          handleChange={handleUpdateChange}
+          handleSubmit={handleUpdate}
+          handleDelete={handleDelete}
+          isUpdate
         />
-        <button type="button" onClick={handleSearchByName}>Buscar</button>
       </div>
 
-      {provinceResult && (
-        <div>
-          <h4>Resultado:</h4>
-          <p>ID: {provinceResult.provinceId}</p>
-          <p>Nombre: {provinceResult.name}</p>
-          <p>CountryId: {provinceResult.countryId}</p>
-          <p>Visiteds: {provinceResult.visiteds?.length ?? 0}</p>
-        </div>
-      )}
+      <div className="province-manager-section">
+        <Typography variant="h6">Buscar provincia</Typography>
+        <ProvinceSearch
+          values={searchForm}
+          handleChange={handleSearchChange}
+          handleSearchById={handleSearchById}
+          handleSearchByName={handleSearchByName}
+        />
+        <ProvinceResult province={provinceResult} />
+      </div>
 
       <Modal
         open={open}
