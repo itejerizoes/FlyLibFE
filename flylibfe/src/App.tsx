@@ -3,8 +3,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './pages/common/login';
 import Dashboard from './pages/common/dashboard';
 import Register from './pages/common/register';
-import PrivateRoute from './components/privateRoute';
-import Layout from './components/layout';
+import PrivateRoute from './components/common/privateRoute';
+import Layout from './components/common/layout';
 import CountryManager from './pages/countries/countryManager';
 import Countries from './pages/countries/countries';
 import ManagerUserRole from './pages/managerUserRole/managerUserRole';
@@ -16,6 +16,7 @@ import VisitedManager from './pages/visiteds/visitedManager';
 import Visiteds from './pages/visiteds/visiteds';
 import PhotoManager from './pages/photos/photoManager';
 import Photos from './pages/photos/photos';
+import UnauthorizedPage from './components/common/unauthorized';
 
 function App() {
   return (
@@ -27,24 +28,65 @@ function App() {
           <Route
             path="/dashboard"
             element={
-              <PrivateRoute>
                 <Dashboard />
-              </PrivateRoute>
             }
           />
           {/* Puedes agregar más rutas protegidas aquí */}
-          <Route path="/userrole-manager" element={<ManagerUserRole />} />
-          <Route path="/country-manager" element={<CountryManager />} />
-          <Route path="/countries" element={<Countries />} />
-          <Route path="/provinces" element={<Provinces />} />
-          <Route path="/province-manager" element={<ProvinceManager />} />
-          <Route path="/user-manager" element={<ManagerUser />} />
-          <Route path="/users" element={<Users />} />
-          <Route path="/visited-manager" element={<VisitedManager />} />
-          <Route path="/visiteds" element={<Visiteds />} />
-          <Route path="/photo-manager" element={<PhotoManager />} />
-          <Route path="/photos" element={<Photos />} />
+          <Route path="/userrole-manager"
+            element={
+              <PrivateRoute requiredRole="Admin">
+                <ManagerUserRole />
+              </PrivateRoute>
+            } 
+          />
+          <Route path="/country-manager"
+            element={
+              <PrivateRoute requiredRole="Admin">
+                <CountryManager />
+              </PrivateRoute>
+            } 
+          />
+          <Route path="/province-manager"
+            element={
+              <PrivateRoute requiredRole="Admin">
+                <ProvinceManager />
+              </PrivateRoute>
+            }
+          />
+          <Route path="/user-manager"
+            element={
+              <PrivateRoute requiredRole="Admin">
+                <ManagerUser />
+              </PrivateRoute>
+            }
+          />
+          <Route path="/visited-manager"
+            element={
+              <PrivateRoute requiredRole="Admin">
+                <VisitedManager />
+              </PrivateRoute>
+            }
+          />
+          <Route path="/photo-manager"
+          element={<PhotoManager />}
+          />
+          <Route path="/countries"
+          element={<Countries />}
+          />
+          <Route path="/provinces"
+          element={<Provinces />}
+          />
+          <Route path="/users"
+          element={<Users />}
+          />
+          <Route path="/photos"
+          element={<Photos />}
+          />
+          <Route path="/visiteds"
+          element={<Visiteds />}
+          />
         </Route>
+        <Route path="/unauthorized" element={<UnauthorizedPage />} />
       </Routes>
     </Router>
   );

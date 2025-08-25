@@ -6,24 +6,26 @@ import {
   updateVisited,
   deleteVisited
 } from '../../api/visiteds';
-import { Visited, VisitedCreate, VisitedUpdate } from '../../types/visited';
+import { Visited } from '../../types/visited';
 import VisitedList from '../../components/visitedManager/visitedList';
 import VisitedForm from '../../components/visitedManager/visitedForm';
 import VisitedSearch from '../../components/visitedManager/visitedSearch';
 import VisitedResult from '../../components/visitedManager/visitedResult';
-import Modal from '../../components/modal';
+import Modal from '../../components/common/modal';
 import { useForm } from '../../hooks/useForm';
 import { useModal } from '../../hooks/useModal';
 import Typography from '@mui/material/Typography';
 import '../../styles/visiteds/visitedManager.css';
 
 const VisitedManager: React.FC = () => {
-  const { values: createData, handleChange: handleCreateChange, reset: resetCreate } = useForm<VisitedCreate>({ userId: '', provinceId: 0, photos: [] });
-  const { values: updateData, handleChange: handleUpdateChange, reset: resetUpdate } = useForm<VisitedUpdate>({ id: 0, userId: '', provinceId: 0, photos: [] });
+  const { values: createData, reset: resetCreate } = useForm({ userId: '', provinceId: 0 });
+  const { values: updateData, reset: resetUpdate } = useForm({ id: 0, userId: '', provinceId: 0 });
   const { values: searchForm, handleChange: handleSearchChange } = useForm<{ id: string }>({ id: '' });
   const [visiteds, setVisiteds] = React.useState<Visited[]>([]);
   const [loading, setLoading] = React.useState(true);
   const [visitedResult, setVisitedResult] = React.useState<Visited | null>(null);
+  const [createLoading, setCreateLoading] = React.useState(false);
+  const [updateLoading, setUpdateLoading] = React.useState(false);
 
   // Modal hook
   const { open, title, content, showModal, closeModal } = useModal();
@@ -34,31 +36,46 @@ const VisitedManager: React.FC = () => {
       .finally(() => setLoading(false));
   }, []);
 
-  const handleCreate = async (e: React.FormEvent) => {
-    e.preventDefault();
+  // Crear registro
+  const handleCreate = async (values: { userId: string; provinceId: number }) => {
+    setCreateLoading(true);
     try {
-      const visited = await createVisited(createData);
+      const visited = await createVisited({ ...values, photos: [] });
       setVisiteds([...visiteds, visited]);
       showModal('Éxito', `Registro creado: ${visited.id}`);
       resetCreate();
     } catch {
       showModal('Error', 'Error al crear registro');
+      throw new Error('Error al crear registro');
+    } finally {
+      setCreateLoading(false);
     }
   };
 
-  const handleUpdate = async (e: React.FormEvent) => {
-    e.preventDefault();
+  // Actualizar registro
+  const handleUpdate = async (values: { id?: number; userId: string; provinceId: number }) => {
+    setUpdateLoading(true);
     try {
-      await updateVisited(updateData.id, updateData);
-      setVisiteds(visiteds.map(v => v.id === updateData.id ? { ...v, ...updateData } : v));
-      showModal('Éxito', 'Registro actualizado');
-      resetUpdate();
+      if (typeof values.id === 'number') {
+        await updateVisited(values.id, { ...values, id: values.id, photos: [] });
+        setVisiteds(visiteds.map(v => v.id === values.id ? { ...v, ...values, photos: [] } : v));
+        showModal('Éxito', 'Registro actualizado');
+        resetUpdate();
+      } else {
+        showModal('Error', 'El ID del registro es obligatorio');
+        throw new Error('El ID del registro es obligatorio');
+      }
     } catch {
       showModal('Error', 'Error al actualizar registro');
+      throw new Error('Error al actualizar registro');
+    } finally {
+      setUpdateLoading(false);
     }
   };
 
+  // Eliminar registro
   const handleDelete = async () => {
+    setUpdateLoading(true);
     try {
       await deleteVisited(updateData.id);
       setVisiteds(visiteds.filter(v => v.id !== updateData.id));
@@ -66,9 +83,12 @@ const VisitedManager: React.FC = () => {
       resetUpdate();
     } catch {
       showModal('Error', 'Error al eliminar registro');
+    } finally {
+      setUpdateLoading(false);
     }
   };
 
+  // Buscar por ID
   const handleSearchById = async () => {
     try {
       const visited = await getVisitedById(Number(searchForm.id));
@@ -93,19 +113,19 @@ const VisitedManager: React.FC = () => {
       <div className="visited-manager-section">
         <Typography variant="h6">Crear registro</Typography>
         <VisitedForm
-          values={createData}
-          handleChange={handleCreateChange}
-          handleSubmit={handleCreate}
+          initialValues={createData}
+          loading={createLoading}
+          onSubmit={handleCreate}
         />
       </div>
 
       <div className="visited-manager-section">
         <Typography variant="h6">Actualizar/Eliminar registro</Typography>
         <VisitedForm
-          values={updateData}
-          handleChange={handleUpdateChange}
-          handleSubmit={handleUpdate}
-          handleDelete={handleDelete}
+          initialValues={updateData}
+          loading={updateLoading}
+          onSubmit={handleUpdate}
+          onDelete={handleDelete}
           isUpdate
         />
       </div>

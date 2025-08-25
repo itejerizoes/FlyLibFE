@@ -10,16 +10,19 @@ import { Country } from '../../types/country';
 import CountryForm from '../../components/countryManager/countryForm';
 import CountrySearch from '../../components/countryManager/countrySearch';
 import CountryResult from '../../components/countryManager/countryResult';
-import Modal from '../../components/modal';
+import Modal from '../../components/common/modal';
 import { useForm } from '../../hooks/useForm';
 import { useModal } from '../../hooks/useModal';
 import Typography from '@mui/material/Typography';
 import '../../styles/countries/countryManager.css';
 
 const CountryManager: React.FC = () => {
-  // Form hooks
-  const { values: createData, handleChange: handleCreateChange, reset: resetCreate } = useForm({ name: '', isoCode: '' });
-  const { values: updateData, handleChange: handleUpdateChange, reset: resetUpdate } = useForm({ countryId: 0, name: '', isoCode: '' });
+  // Estados para formularios
+  const [createLoading, setCreateLoading] = React.useState(false);
+  const [updateLoading, setUpdateLoading] = React.useState(false);
+
+  const { values: createData, reset: resetCreate } = useForm({ name: '', isoCode: '' });
+  const { values: updateData, reset: resetUpdate } = useForm({ countryId: 0, name: '', isoCode: '' });
   const { values: search, handleChange: handleSearchChange } = useForm({ id: '', name: '' });
   const [countryResult, setCountryResult] = React.useState<Country | null>(null);
 
@@ -27,37 +30,51 @@ const CountryManager: React.FC = () => {
   const { open, title, content, showModal, closeModal } = useModal();
 
   // Create
-  const handleCreate = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleCreate = async (values: { name: string; isoCode: string }) => {
+    setCreateLoading(true);
     try {
-      const country = await createCountry(createData);
+      const country = await createCountry(values);
       showModal('Éxito', `País creado: ${country.name}`);
       resetCreate();
     } catch {
       showModal('Error', 'Error al crear país');
+      throw new Error('Error al crear país');
+    } finally {
+      setCreateLoading(false);
     }
   };
 
   // Update
-  const handleUpdate = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleUpdate = async (values: { countryId?: number; name: string; isoCode: string }) => {
+    setUpdateLoading(true);
     try {
-      await updateCountry(updateData.countryId, updateData);
-      showModal('Éxito', 'País actualizado');
-      resetUpdate();
+      if (typeof values.countryId === 'number') {
+        await updateCountry(values.countryId, { ...values, countryId: values.countryId });
+        showModal('Éxito', 'País actualizado');
+        resetUpdate();
+      } else {
+        showModal('Error', 'El ID del país es obligatorio');
+        throw new Error('El ID del país es obligatorio');
+      }
     } catch {
       showModal('Error', 'Error al actualizar país');
+      throw new Error('Error al actualizar país');
+    } finally {
+      setUpdateLoading(false);
     }
   };
 
   // Delete
   const handleDelete = async () => {
+    setUpdateLoading(true);
     try {
       await deleteCountry(updateData.countryId);
       showModal('Éxito', 'País eliminado');
       resetUpdate();
     } catch {
       showModal('Error', 'Error al eliminar país');
+    } finally {
+      setUpdateLoading(false);
     }
   };
 
@@ -94,19 +111,19 @@ const CountryManager: React.FC = () => {
       <div className="country-manager-section">
         <Typography variant="h6">Crear país</Typography>
         <CountryForm
-          values={createData}
-          handleChange={handleCreateChange}
-          handleSubmit={handleCreate}
+          initialValues={createData}
+          loading={createLoading}
+          onSubmit={handleCreate}
         />
       </div>
 
       <div className="country-manager-section">
         <Typography variant="h6">Actualizar/Eliminar país</Typography>
         <CountryForm
-          values={updateData}
-          handleChange={handleUpdateChange}
-          handleSubmit={handleUpdate}
-          handleDelete={handleDelete}
+          initialValues={updateData}
+          loading={updateLoading}
+          onSubmit={handleUpdate}
+          onDelete={handleDelete}
           isUpdate
         />
       </div>

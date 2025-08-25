@@ -13,7 +13,7 @@ import UserList from '../../components/managerUserRole/userList';
 import UserSearch from '../../components/managerUserRole/userSearch';
 import RoleAssignForm from '../../components/managerUserRole/roleAssignForm';
 import RoleManageForm from '../../components/managerUserRole/roleManageForm';
-import Modal from '../../components/modal';
+import Modal from '../../components/common/modal';
 import { useForm } from '../../hooks/useForm';
 import { useModal } from '../../hooks/useModal';
 import Typography from '@mui/material/Typography';
@@ -26,8 +26,8 @@ const ManagerUserRole: React.FC = () => {
 
   // Form hooks
   const { values: searchForm, handleChange: handleSearchChange } = useForm({ email: '' });
-  const { values: assignForm, handleChange: handleAssignChange, reset: resetAssign } = useForm({ userEmail: '', role: '' });
-  const { values: roleForm, handleChange: handleRoleChange, reset: resetRole } = useForm({ roleName: '' });
+  const { values: assignForm, reset: resetAssign } = useForm({ userEmail: '', role: '' });
+  const { values: roleForm, reset: resetRole } = useForm({ roleName: '' });
 
   // Modal hook
   const { open, title, content, showModal, closeModal } = useModal();
@@ -114,21 +114,17 @@ const ManagerUserRole: React.FC = () => {
       <div className="manager-user-role-section">
         <Typography variant="h6">Asignar/Remover rol a usuario</Typography>
         <RoleAssignForm
-          values={assignForm}
           roles={roles}
-          handleChange={handleAssignChange}
-          handleAssign={handleAssignRole}
-          handleRemove={handleRemoveRole}
+          onSubmit={handleAssignRole}
+          onRemove={handleRemoveRole}
         />
       </div>
 
       <div className="manager-user-role-section">
         <Typography variant="h6">Crear/Eliminar rol</Typography>
         <RoleManageForm
-          value={roleForm.roleName}
-          handleChange={handleRoleChange}
-          handleCreate={handleCreateRole}
-          handleDelete={handleDeleteRole}
+          onCreate={handleCreateRole}
+          onDelete={handleDeleteRole}
         />
       </div>
 

@@ -1,8 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { useForm } from '../../hooks/useForm';
-import { useToggle } from '../../hooks/useToggle';
 import { useLogin } from '../../hooks/useLogin';
 import { useRedirectIfAuthenticated } from '../../hooks/useRedirectIfAuthenticated';
 import LoginForm from '../../components/common/loginForm';
@@ -13,18 +11,23 @@ import '../../styles/common/login.css';
 const Login: React.FC = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
-  const { values, handleChange } = useForm({ email: '', password: '' });
-  const [showPassword, toggleShowPassword] = useToggle(false);
   const { loginUser, loading, error } = useLogin();
 
   useRedirectIfAuthenticated('/dashboard');
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (values: { email: string; password: string }) => {
     const res = await loginUser(values.email, values.password);
     if (res) {
-      login(res.token, res.refreshToken, res.displayName);
+      const roles =
+      Array.isArray(res.roles)
+        ? res.roles.filter((r): r is string => typeof r === 'string')
+        : typeof res.roles === 'string'
+        ? [res.roles]
+        : [];
+      login(res.token, res.refreshToken, res.displayName, roles);
       navigate('/dashboard');
+    } else {
+      throw new Error('Credenciales inválidas');
     }
   };
 
@@ -38,13 +41,9 @@ const Login: React.FC = () => {
         Iniciar sesión
       </Typography>
       <LoginForm
-        values={values}
-        handleChange={handleChange}
-        showPassword={showPassword}
-        toggleShowPassword={toggleShowPassword}
         loading={loading}
         error={error}
-        handleSubmit={handleSubmit}
+        onSubmit={handleSubmit}
       />
       <LoginGoogleButton loading={loading} onClick={handleGoogleExternalLogin} />
       <div className="login-link">

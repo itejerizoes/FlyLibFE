@@ -1,8 +1,6 @@
-import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { useRedirectIfNotAuthenticated } from '../../hooks/useRedirectIfNotAuthenticated';
-import { useQueryParams } from '../../hooks/useQueryParams';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import DashboardHeader from '../../components/common/dashboardHeader';
@@ -11,23 +9,33 @@ import DashboardContent from '../../components/common/dashboardContent';
 import '../../styles/common/dashboard.css';
 
 const Dashboard: React.FC = () => {
+  const location = useLocation();
   const navigate = useNavigate();
-  const { login, logout, displayName, isAuthenticated } = useAuth();
-  useRedirectIfNotAuthenticated('/login');
-  const params = useQueryParams();
+  const { logout, login, isAuthenticated, displayName } = useAuth();
+  const [processing, setProcessing] = useState(true);
 
   useEffect(() => {
+    const params = new URLSearchParams(location.search);
     const token = params.get('token');
     const refreshToken = params.get('refreshToken');
-    const name = params.get('displayName');
-    if (token && refreshToken) {
-      login(token, refreshToken, name || undefined);
+    const displayName = params.get('displayName');
+    const roles = params.get('roles')?.split(',') ?? [];
+
+    // Solo llama a login si el usuario NO está autenticado y hay token en la URL
+    if (!isAuthenticated && token && refreshToken) {
+      login(token, refreshToken, displayName ?? undefined, roles);
       navigate('/dashboard', { replace: true });
     }
-  }, [params, navigate, login]);
+    setProcessing(false);
+  }, [location, login, navigate]);
 
-  if (!isAuthenticated) {
+  if (processing || !isAuthenticated) {
     return <div>Cargando...</div>;
+  }
+
+  if (!processing && !isAuthenticated) {
+    navigate('/login', { replace: true });
+    return null;
   }
 
   const handleLogout = () => {
