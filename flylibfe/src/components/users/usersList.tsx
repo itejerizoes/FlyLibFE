@@ -6,21 +6,28 @@ import { User } from '../../types/user';
 
 interface UsersListProps {
   users: User[];
+  loading: boolean;
 }
 
-const UsersList: React.FC<UsersListProps> = ({ users }) => (
-  <List>
-    {users.map(user => (
-      <ListItem key={user.id} sx={{ flexDirection: 'column', mb: 2 }}>
-        <Typography variant="h6">
-          {user.displayName} <span style={{ color: '#888' }}>({user.authProvider})</span>
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          ID: {user.id}
-        </Typography>
-      </ListItem>
-    ))}
-  </List>
+const UsersList: React.FC<UsersListProps> = ({ users, loading }) => (
+  <>
+    <Typography variant="h6" gutterBottom>
+      Listado de usuarios
+    </Typography>
+    {loading ? (
+      <Typography>Cargando usuarios...</Typography>
+    ) : (
+      <List>
+        {users.map(user => (
+          <ListItem key={user.id} sx={{ flexDirection: 'column', mb: 2 }}>
+            <Typography variant="subtitle1">
+              <strong>{user.displayName}</strong> ({user.authProvider}) - ID: {user.id}
+            </Typography>
+          </ListItem>
+        ))}
+      </List>
+    )}
+  </>
 );
 
 export default UsersList;

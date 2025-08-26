@@ -7,10 +7,10 @@ import {
   getProvinceByName
 } from '../../api/provinces';
 import { Province } from '../../types/province';
-import ProvinceForm from '../../components/provinceManager/provinceForm';
-import ProvinceSearch from '../../components/provinceManager/provinceSearch';
-import ProvinceResult from '../../components/provinceManager/provinceResult';
-import Modal from '../../components/common/modal';
+import ProvinceForm from '../../components/provinces/provinceForm';
+import ProvinceSearch from '../../components/provinces/provinceSearch';
+import ProvinceResult from '../../components/provinces/provinceResult';
+import Modal from '../../components/global/modal';
 import { useForm } from '../../hooks/useForm';
 import { useModal } from '../../hooks/useModal';
 import Typography from '@mui/material/Typography';

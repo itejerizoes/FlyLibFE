@@ -7,10 +7,10 @@ import {
   deleteUser
 } from '../../api/users';
 import { User } from '../../types/user';
-import UsersList from '../../components/managerUser/usersList';
-import UserForm from '../../components/managerUser/userForm';
-import UserSearch from '../../components/managerUser/userSearch';
-import Modal from '../../components/common/modal';
+import UsersList from '../../components/users/usersList';
+import UserForm from '../../components/users/userForm';
+import UserSearch from '../../components/users/userSearch';
+import Modal from '../../components/global/modal';
 import { useForm } from '../../hooks/useForm';
 import { useModal } from '../../hooks/useModal';
 import Typography from '@mui/material/Typography';

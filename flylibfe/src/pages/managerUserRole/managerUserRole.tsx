@@ -9,11 +9,11 @@ import {
   deleteRole
 } from '../../api/manageruserrole';
 import { UserRole } from '../../types/manageUserRole';
-import UserList from '../../components/managerUserRole/userList';
-import UserSearch from '../../components/managerUserRole/userSearch';
+import UserList from '../../components/managerUserRole/userRoleList';
+import UserSearch from '../../components/managerUserRole/userRoleSearch';
 import RoleAssignForm from '../../components/managerUserRole/roleAssignForm';
 import RoleManageForm from '../../components/managerUserRole/roleManageForm';
-import Modal from '../../components/common/modal';
+import Modal from '../../components/global/modal';
 import { useForm } from '../../hooks/useForm';
 import { useModal } from '../../hooks/useModal';
 import Typography from '@mui/material/Typography';

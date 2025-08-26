@@ -1,7 +1,7 @@
 import React from 'react';
 import { getVisiteds } from '../../api/visiteds';
 import { Visited } from '../../types/visited';
-import VisitedsList from '../../components/visiteds/visitedsList';
+import VisitedList from '../../components/visiteds/visitedsList';
 import Typography from '@mui/material/Typography';
 import { useFetch } from '../../hooks/useFetch';
 import '../../styles/visiteds/visiteds.css';
@@ -16,7 +16,7 @@ const Visiteds: React.FC = () => {
       </Typography>
       {loading && <Typography>Cargando registros de visitas...</Typography>}
       {error && <Typography color="error">{error}</Typography>}
-      {visiteds && <VisitedsList visiteds={visiteds} />}
+      {visiteds && <VisitedList visiteds={visiteds} loading={loading} />}
     </div>
   );
 };

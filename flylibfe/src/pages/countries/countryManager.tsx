@@ -7,10 +7,10 @@ import {
   getCountryByName
 } from '../../api/countries';
 import { Country } from '../../types/country';
-import CountryForm from '../../components/countryManager/countryForm';
-import CountrySearch from '../../components/countryManager/countrySearch';
-import CountryResult from '../../components/countryManager/countryResult';
-import Modal from '../../components/common/modal';
+import CountryForm from '../../components/countries/countryForm';
+import CountrySearch from '../../components/countries/countrySearch';
+import CountryResult from '../../components/countries/countryResult';
+import Modal from '../../components/global/modal';
 import { useForm } from '../../hooks/useForm';
 import { useModal } from '../../hooks/useModal';
 import Typography from '@mui/material/Typography';

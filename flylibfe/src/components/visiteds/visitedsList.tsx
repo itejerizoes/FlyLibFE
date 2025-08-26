@@ -2,28 +2,32 @@ import React from 'react';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
 import { Visited } from '../../types/visited';
 
-interface VisitedsListProps {
+interface VisitedListProps {
   visiteds: Visited[];
+  loading: boolean;
 }
 
-const VisitedsList: React.FC<VisitedsListProps> = ({ visiteds }) => (
-  <List>
-    {visiteds.map(visited => (
-      <ListItem key={visited.id} sx={{ flexDirection: 'column', mb: 2 }}>
-        <Typography variant="body1">
-          Usuario: {visited.userId} | Provincia: {visited.provinceId}
-        </Typography>
-        <Box>
-          <Typography variant="body2" color="text.secondary">
-            Fotos: {visited.photos?.length ?? 0}
-          </Typography>
-        </Box>
-      </ListItem>
-    ))}
-  </List>
+const VisitedList: React.FC<VisitedListProps> = ({ visiteds, loading }) => (
+  <>
+    <Typography variant="h6" gutterBottom>
+      Listado de registros
+    </Typography>
+    {loading ? (
+      <Typography>Cargando registros...</Typography>
+    ) : (
+      <List>
+        {visiteds.map(v => (
+          <ListItem key={v.id} sx={{ flexDirection: 'column', mb: 2 }}>
+            <Typography variant="body1">
+              Usuario: {v.userId} | Provincia: {v.provinceId} | Fotos: {v.photos?.length ?? 0}
+            </Typography>
+          </ListItem>
+        ))}
+      </List>
+    )}
+  </>
 );
 
-export default VisitedsList;
+export default VisitedList;

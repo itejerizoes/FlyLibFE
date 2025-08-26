@@ -7,11 +7,11 @@ import {
   deleteVisited
 } from '../../api/visiteds';
 import { Visited } from '../../types/visited';
-import VisitedList from '../../components/visitedManager/visitedList';
-import VisitedForm from '../../components/visitedManager/visitedForm';
-import VisitedSearch from '../../components/visitedManager/visitedSearch';
-import VisitedResult from '../../components/visitedManager/visitedResult';
-import Modal from '../../components/common/modal';
+import VisitedList from '../../components/visiteds/visitedsList';
+import VisitedForm from '../../components/visiteds/visitedForm';
+import VisitedSearch from '../../components/visiteds/visitedSearch';
+import VisitedResult from '../../components/visiteds/visitedResult';
+import Modal from '../../components/global/modal';
 import { useForm } from '../../hooks/useForm';
 import { useModal } from '../../hooks/useModal';
 import Typography from '@mui/material/Typography';

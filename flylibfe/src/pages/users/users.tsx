@@ -16,7 +16,7 @@ const Users: React.FC = () => {
       </Typography>
       {loading && <Typography>Cargando usuarios...</Typography>}
       {error && <Typography color="error">{error}</Typography>}
-      {users && <UsersList users={users} />}
+      {users && <UsersList users={users} loading={loading} />}
     </div>
   );
 };

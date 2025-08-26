@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './pages/common/login';
 import Dashboard from './pages/common/dashboard';
 import Register from './pages/common/register';
-import PrivateRoute from './components/common/privateRoute';
+import PrivateRoute from './components/global/privateRoute';
 import Layout from './components/common/layout';
 import CountryManager from './pages/countries/countryManager';
 import Countries from './pages/countries/countries';

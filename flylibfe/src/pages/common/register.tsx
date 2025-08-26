@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { register as apiRegister } from '../../api/auth';
-import RegisterForm from '../../components/common/registerForm';
+import RegisterForm from '../../components/global/registerForm';
 import Typography from '@mui/material/Typography';
 import '../../styles/common/register.css';
 

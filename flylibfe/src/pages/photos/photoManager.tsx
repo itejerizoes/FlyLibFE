@@ -6,10 +6,10 @@ import {
   getPhotoById
 } from '../../api/photos';
 import { PhotoCreate, PhotoUpdate, Photo } from '../../types/photo';
-import PhotoForm from '../../components/photoManager/photoForm';
-import PhotoSearch from '../../components/photoManager/photoSearch';
-import PhotoResult from '../../components/photoManager/photoResult';
-import Modal from '../../components/common/modal';
+import PhotoForm from '../../components/photos/photoForm';
+import PhotoSearch from '../../components/photos/photoSearch';
+import PhotoResult from '../../components/photos/photoResult';
+import Modal from '../../components/global/modal';
 import { useForm } from '../../hooks/useForm';
 import { useModal } from '../../hooks/useModal';
 import Typography from '@mui/material/Typography';
