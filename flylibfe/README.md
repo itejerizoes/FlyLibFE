@@ -1,46 +1,87 @@
-# Getting Started with Create React App
+# FlyLibFE
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+FlyLibFE es una aplicación web desarrollada en React para la gestión de usuarios, países, provincias, fotos y registros de visitas.
 
-## Available Scripts
+## Estructura del Proyecto
 
-In the project directory, you can run:
+```
+flylibfe/
+  ├── public/
+  ├── src/
+  │   ├── api/           # Lógica de acceso a la API (axios, endpoints)
+  │   ├── components/    # Componentes reutilizables
+  │   ├── context/       # Contextos globales (ej. Auth)
+  │   ├── hooks/         # Custom hooks
+  │   ├── pages/         # Páginas principales
+  │   ├── styles/        # Archivos de estilos
+  │   ├── types/         # Tipos TypeScript
+  │   ├── utils/         # Utilidades
+  │   └── __tests__/     # Tests unitarios e integración
+  ├── README.md
+  ├── package.json
+  ├── tsconfig.json
+  └── ...
+```
 
-### `npm start`
+## Instalación
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+1. Clona el repositorio:
+   ```sh
+   git clone https://github.com/tu-usuario/flylibfe.git
+   cd flylibfe
+   ```
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+2. Instala las dependencias:
+   ```sh
+   npm install
+   ```
 
-### `npm test`
+## Scripts Disponibles
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- `npm start`: Ejecuta la app en modo desarrollo ([http://localhost:3000](http://localhost:3000)).
+- `npm test`: Ejecuta los tests en modo interactivo.
+- `npm run build`: Genera el build de producción en la carpeta `build`.
+- `npm run eject`: Expone la configuración de Create React App (irreversible).
 
-### `npm run build`
+## Configuración de la API
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+La configuración de la API se encuentra en [`src/api/axios.ts`](src/api/axios.ts). Modifica la propiedad `baseURL` según la URL de tu backend.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Testing
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Los tests están ubicados en la carpeta [`src/__tests__`](src/__tests__). Se utilizan Jest y React Testing Library para pruebas unitarias e integración.
 
-### `npm run eject`
+Ejecuta los tests con:
+```sh
+npm test
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## Estructura de Componentes
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- **Páginas:** Cada entidad (usuarios, países, provincias, fotos, visitados) tiene su propia página en [`src/pages`](src/pages).
+- **Componentes:** Los formularios y listas reutilizables están en [`src/components`](src/components).
+- **Hooks:** Custom hooks como [`useFetch`](src/hooks/useFetch.ts) para manejo de datos.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## Autenticación
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+La autenticación y gestión de tokens se realiza mediante [`src/api/auth.ts`](src/api/auth.ts) y el contexto [`src/context/AuthContext.tsx`](src/context/AuthContext.tsx).
 
-## Learn More
+## Contribuir
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+1. Haz un fork del repositorio.
+2. Crea una rama (`git checkout -b feature/nueva-funcionalidad`).
+3. Realiza tus cambios y agrega tests.
+4. Haz un commit (`git commit -am 'Agrega nueva funcionalidad'`).
+5. Haz push a tu rama (`git push origin feature/nueva-funcionalidad`).
+6. Abre un Pull Request.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Licencia
+
+MIT
+
+---
+
+**Documenta tu código**  
+- Usa comentarios explicativos en funciones y componentes.
+- Agrega JSDoc en funciones complejas.
+- Mantén este README actualizado con nuevas instrucciones y dependencias.

@@ -6,7 +6,7 @@ describe('DashboardContent', () => {
   test('muestra el mensaje principal', () => {
     render(<DashboardContent />);
     expect(
-      screen.getAllByText(/Selecciona una opción del menú para gestionar los datos de FlyLib/i)
+      screen.getByText(/Selecciona una opción del menú para gestionar los datos de FlyLib/i)
     ).toBeInTheDocument();
   });
 
